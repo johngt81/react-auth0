@@ -14,7 +14,7 @@ import Home from './routes/home.jsx'
 import LoginPage from './routes/login.jsx'
 import ProtectedPage from './routes/protectedPage.jsx'
 import Layout from './layout.jsx'
-import { AuthProvider } from './components/authContext.jsx'
+import { AuthProvider } from './components/authProvider.jsx'
 import RequireAuth from './components/requireAuth.jsx'
 
 const router = createBrowserRouter(
