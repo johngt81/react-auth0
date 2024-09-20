@@ -1,44 +1,46 @@
 import { useState } from 'react'
 import { AuthContext } from './authContext'
-
-const fakeAuthProvider = {
-    isAuthenticated: false,
-    signin(callback) {
-        fakeAuthProvider.isAuthenticated = true;
-        setTimeout(callback, 100); // fake async
-    },
-    signout(callback) {
-        fakeAuthProvider.isAuthenticated = false;
-        setTimeout(callback, 100);
-    },
-};
+import { useAuth0 } from '@auth0/auth0-react';
+import { useEffect } from 'react';
 
 function AuthProvider({ children }) {
-    const [user, setUser] = useState(null);
+    const {
+        isAuthenticated,
+        loginWithRedirect,
+        logout,
+        user
+    } = useAuth0();
+    const [authUser, setAuthUser] = useState(null);
 
-    let signin = (newUser, callback) => {
-        return fakeAuthProvider.signin(() => {
-            setUser(newUser);
-            callback();
+    useEffect(() => {
+        if (isAuthenticated && user) {
+            setAuthUser(user.name);
+        } else {
+            setAuthUser(null);
         }
-        );
+
+    }, [isAuthenticated, user]);
+
+    let signin = () => {
+        loginWithRedirect();
     }
 
-    let signout = (callback) => {
-        return fakeAuthProvider.signout(() => {
-            setUser(null);
-            callback();
-        });
+    let signout = async (callback) => {
+        await logout({ returnTo: window.location.origin });
+        callback();
     }
 
     let value = {
-        user,
+        user: authUser,
         signin,
         signout
     };
 
-    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+    return (
+        <AuthContext.Provider value={value}>
+            {children}
+        </AuthContext.Provider>);
 }
 
-export { AuthProvider, fakeAuthProvider };
+export { AuthProvider };
 

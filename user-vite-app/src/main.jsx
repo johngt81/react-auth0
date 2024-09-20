@@ -7,8 +7,6 @@ import {
   Route
 } from "react-router-dom"
 import './index.css'
-import Root from "./routes/root"
-import ErrorPage from './error-page.jsx'
 import Contact from './routes/contact.jsx'
 import Home from './routes/home.jsx'
 import LoginPage from './routes/login.jsx'
@@ -16,6 +14,7 @@ import ProtectedPage from './routes/protectedPage.jsx'
 import Layout from './layout.jsx'
 import { AuthProvider } from './components/authProvider.jsx'
 import RequireAuth from './components/requireAuth.jsx'
+import { CustomAuth0Provider } from './components/customAuth0Provider.jsx'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -48,8 +47,10 @@ const router = createBrowserRouter(
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <AuthProvider>
-      <RouterProvider router={router} />
-    </AuthProvider>
+    <CustomAuth0Provider>
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
+    </CustomAuth0Provider>
   </StrictMode>,
 )
